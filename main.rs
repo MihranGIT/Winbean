@@ -19,64 +19,83 @@ fn basic_information() {
     println!("Windows version: {}", product_name);
     println!("Username: {}", whoami::username());
     println!("Hostname: {}", whoami::hostname());
+    println!("Langue: {:?}", whoami::lang().collect::<Vec<String>>());
     println!("==================================================================");
 }
 
 fn browse_dir() {
+    println!("==================================================================");
     for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
         let path = file.path().display();
         let file = file.file_name().to_string_lossy();
-        if file.ends_with("password.txt")
+        if file.ends_with("password.txt") || file.ends_with("pass.txt") || file.ends_with("passwords.txt") 
+        || file.ends_with("motdepasse.txt") || file.ends_with("mdp.txt") || file.ends_with("pass.txt")
         {
-            println!("Fichier password trouve : {}", path);
-            let file = File::open(path.to_string()).expect("Impossible d'ouvrir le fichier");
-            let reader = BufReader::new(file);
-            for (index, line) in reader.lines().enumerate() {
-                let line = line.unwrap();
-                println!("Contenu : {}", line);
-            }
+            println!("Potentiel fichier interessant trouve : {}", path);
+            enum_content_file((&path).to_string());
         }
         if file.ends_with(".gitconfig")
         {
             println!("Fichier config git : {}", path);
-            let file = File::open(path.to_string()).expect("toto");
-            let reader = BufReader::new(file);
-            for (index, line) in reader.lines().enumerate() {
-                let line = line.unwrap();
-                println!("Contenu : {}", line);
-            }
+            enum_content_gitconfig((&path).to_string());
         }
         if file.ends_with(".bash_history")
         {
             println!("Fichier d'historique WSL trouve : {}", path);
-            let file = File::open(path.to_string()).expect("toto");
-            let reader = BufReader::new(file);
-            for (index, line) in reader.lines().enumerate() {
-                let line = line.unwrap();
-                println!("Contenu : {}", line);
-            } 
+            enum_bash_history((&path).to_string());
         }
+        if file.ends_with(".ssh") || file.ends_with("id_rsa")
+        {
+            println!("Fichier ssh trouve : {}", path);
+            enum_ssh_key((&path).to_string());
+        }
+        if file.ends_with(".kdbx")
+        {
+            println!("Fichier Keepass trouve : {}", path);
+        }   
     }
 }
 
+fn enum_content_file(file: String)
+{
+    let file = File::open(file.to_string()).expect("Impossible d'ouvrir le fichier");
+    let reader = BufReader::new(file);
+    for (index, line) in reader.lines().enumerate() {
+        let line = line.unwrap();
+        println!("Ligne numéro {} : {}", index, line);
+   }
+}
 
-// ####### VNC #################
-// RealVNC : HKEY_LOCAL_MACHINE\SOFTWARE\RealVNC\vncserver, Value: Password
-// TightVNC : HKEY_CURRENT_USER\Software\TightVNC\Server, Value: Password or PasswordViewOnly
-// TigerVNC : HKEY_LOCAL_USER\Software\TigerVNC\WinVNC4, Value: Password
-// UltraVNC, C:\Program Files\UltraVNC\ultravnc.ini, Value: passwd or passwd2
+fn enum_content_gitconfig(file: String)
+{
+    let file = File::open(file.to_string()).expect("Impossible d'ouvrir le fichier");
+    let reader = BufReader::new(file);
+    for (index, line) in reader.lines().enumerate() {
+        let line = line.unwrap();
+        if line.to_string().contains("name") || line.to_string().contains("email") || line.to_string().contains("password"){
+            println!("{}. {}", index, line);
+        }
+   }
+}
 
-// ####### SSH #################
-// C:\Users\{USERS}\.ssh
+fn enum_ssh_key(file: String)
+{
+    let file = File::open(file.to_string()).expect("Impossible d'ouvrir le fichier");
+    let reader = BufReader::new(file);
+    for (_index, line) in reader.lines().enumerate() {
+        let line = line.unwrap();
+        println!("{}", line);
+   }
+}
 
-// ####### git #################
-// C:\Users\{USERS}\.gitconfig
-
-// ####### WSL #################
-// C:\Users\{USERS}\.bash_history
-
-// ####### CITRIX ##############
-// %SystemDrive%\Documents and Settings\%username%\Application Data\Citrix\MetaFrame Password Manager
-
-// ####### VAULT - Windows Credential Management ################
-// C:\Users\[User Profile]\AppData\Local\Microsoft\Vault, C:\ProgramData\Microsoft\Vault, C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\Vault
+fn enum_bash_history(file: String)
+{
+    let file = File::open(file.to_string()).expect("Impossible d'ouvrir le fichier");
+    let reader = BufReader::new(file);
+    for (index, line) in reader.lines().enumerate() {
+        let line = line.unwrap();
+        if line.to_string().contains("ssh") {
+            println!("{}. SSH connection : {}", index, line);
+        }
+   }
+}
