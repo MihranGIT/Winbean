@@ -28,8 +28,9 @@ fn browse_dir() {
     for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
         let path = file.path().display();
         let file = file.file_name().to_string_lossy();
-        if file.ends_with("password.txt") || file.ends_with("pass.txt") || file.ends_with("passwords.txt") 
-        || file.ends_with("motdepasse.txt") || file.ends_with("mdp.txt") || file.ends_with("pass.txt")
+        if (file.ends_with("password.txt") || file.ends_with("pass.txt") || file.ends_with("passwords.txt") 
+        || file.ends_with("motdepasse.txt") || file.ends_with("mdp.txt") || file.ends_with("pass.txt"))
+        && file.len() < 10
         {
             println!("Potentiel fichier interessant trouve : {}", path);
             enum_content_file((&path).to_string());
@@ -52,7 +53,12 @@ fn browse_dir() {
         if file.ends_with(".kdbx")
         {
             println!("Fichier Keepass trouve : {}", path);
-        }   
+        }
+        if file.ends_with(".config")
+        {
+            println!("Fichier de conférence trouve : {}", path);
+            enum_content_config((&path).to_string())
+        }
     }
 }
 
@@ -62,7 +68,19 @@ fn enum_content_file(file: String)
     let reader = BufReader::new(file);
     for (index, line) in reader.lines().enumerate() {
         let line = line.unwrap();
-        println!("Ligne numéro {} : {}", index, line);
+        println!("1.{} : {}", index, line);
+   }
+}
+
+fn enum_content_config(file: String)
+{
+    let file = File::open(file.to_string()).expect("Impossible d'ouvrir le fichier");
+    let reader = BufReader::new(file);
+    for (index, line) in reader.lines().enumerate() {
+        let line = line.unwrap();
+        if line.to_string().contains("password"){
+            println!("{}. {}", index, line);
+        }
    }
 }
 
