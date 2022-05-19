@@ -3,12 +3,10 @@ pub mod enum_comp {
     use ipconfig;
     use winreg;
     use whoami;
-    use winreg::enums::{HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER, HKEY_USERS, KEY_READ};
-    use sysinfo::{NetworkExt, NetworksExt, ProcessExt, System, SystemExt};
+    use winreg::enums::{HKEY_LOCAL_MACHINE, KEY_READ};
+    use sysinfo::{ProcessExt, System, SystemExt};
     use netstat2::*;
     use chrono::prelude::*;
-    use std::fs::File;
-    use std::env;
     
     pub fn network_information() 
     {
@@ -99,7 +97,7 @@ pub mod enum_comp {
 
     pub fn processes()
     {
-        let mut sys = System::new_all();
+        let sys = System::new_all();
         println!("\n • RUNNING PROCESSES \n");
         for (pid, process) in sys.processes() 
         {
@@ -114,11 +112,5 @@ pub mod enum_comp {
         let local: DateTime<Local> = Local::now();
         println!("\n • LOCAL TIME \n");
         println!("      {}", local);
-    }
-
-    pub fn create_file()
-    {
-        let mut f = File::create("Output.txt")
-                        .expect("Can't create file in the current folder !");
     }
 }
