@@ -17,7 +17,7 @@ pub mod enum_comp {
         println!("\n    IP addresses  \n");
         
         for adapter in ipconfig::get_adapters()
-                                .unwrap() 
+                                .expect("Could not open the adaptator")
         {
             println!("      {:} - {:?}", adapter.description(), adapter.ip_addresses());
         }
@@ -25,7 +25,7 @@ pub mod enum_comp {
         println!("\n    DNS server  \n");
         
         for adapter in ipconfig::get_adapters()
-                                .unwrap() 
+                                .expect("Could not open the adaptator")
         {
             println!("      {:?}", adapter.dns_servers());
         }
@@ -101,7 +101,8 @@ pub mod enum_comp {
         println!("\n • RUNNING PROCESSES \n");
         for (pid, process) in sys.processes() 
         {
-            println!("      [{}] - {} - {} (Path : {})", pid, process.status(), 
+            println!("      [{}] - {} - {} (Path : {})", pid, 
+                                                        process.status(), 
                                                         process.name(), 
                                                         process.exe().display());
         }
