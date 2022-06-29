@@ -3,6 +3,9 @@ pub mod find_file {
     use walkdir::WalkDir;
     use std::fs::File;
     use std::io::{BufRead, BufReader};
+    use std::path::Path;
+    use faccess::{AccessMode, PathExt};
+    use regex::Regex;
 
     pub fn browse_dir() {
         println!("\n • POTENTIAL INTERESTING FILES \n");
@@ -10,10 +13,12 @@ pub mod find_file {
                                         .filter_map(|file| file.ok()) {
             
             let path = file.path()
-                                    .display();
-            
+            .display();
+
+            let CheckPath = Path::new(file.path());
+
             let file = file.file_name()
-                                     .to_string_lossy();
+            .to_string_lossy();
             
             if (file.ends_with("password.txt") 
                 || file.ends_with("pass.txt") 
@@ -22,62 +27,76 @@ pub mod find_file {
                 || file.ends_with("mdp.txt") 
                 || file.ends_with("pass.txt"))
                 && file.len() < 10
+                && CheckPath.readable()
                 {
                     println!("      Interesting file found : {}", path);
                     enum_content_file((&path)
                     .to_string());
                 }
 
-                if file.ends_with(".gitconfig")
+                if file.ends_with(".gitconfig") && CheckPath.readable()
                 {
                     println!("      Git config files : {}", path);
                     enum_content_gitconfig((&path)
                     .to_string());
                 }
 
-                if file.ends_with(".bash_history")
+                if file.ends_with(".bash_history") && CheckPath.readable()
                 {
                     println!("      WSL history files found : {}", path);
                     enum_bash_history((&path)
                     .to_string());
                 }
 
-                if file.ends_with("id_rsa")
+                if file.ends_with("id_rsa") && CheckPath.readable()
                 {
                     println!("      SSH key found : {}", path);
                     enum_ssh_key((&path)
                     .to_string());
                 }
 
-                if file.ends_with(".kdbx")
+                if file.ends_with(".kdbx") && CheckPath.readable()
                 {
                     println!("      Keepas found : {}", path);
                 }
 
-                if file.ends_with(".config")
+                if file.ends_with(".config") && CheckPath.readable()
                 {
                     println!("      Config file found : {}", path);
                     enum_content_config((&path)
                     .to_string())
                 }
+                if file.ends_with(".txt") && CheckPath.readable() && file.len() < 10
+                {
+                    println!("      Text file found : {}", path);
+                    enum_txt_file((&path)
+                    .to_string())
+                }
+
         }
     }
 
     pub fn enum_content_file(file: String)
     {
-        let file = File::open(file.to_string())
-                    .expect("Can't open the file");
-        
+        let file = File::open(file.to_string());
+                    //.expect("Can't open the file");
+                    let file = match file 
+                    {
+                        Ok(file) => file,
+                        Err(e) => panic!("Can't open the file"),
+                    };
         let reader = BufReader::new(file);
         
-        for (index, line) in reader.lines().enumerate() {
+        for (index, line) in reader.lines()
+        .enumerate() 
+        {
             let line = match line 
             {
                 Ok(line) => line,
                 Err(error) => continue,
             };
             println!("1.{} : {}", index, line);
-    }
+        }
     }
 
     pub fn enum_content_config(file: String)
@@ -86,9 +105,8 @@ pub mod find_file {
                         .expect("Couldn't open the file");
         let reader = BufReader::new(file);
         
-        for (index, line) in reader
-                                                           .lines()
-                                                           .enumerate() {
+        for (index, line) in reader.lines()
+                                   .enumerate() {
             let line = match line 
             {
                 Ok(line) => line,
@@ -106,7 +124,7 @@ pub mod find_file {
     pub fn enum_content_gitconfig(file: String)
     {
         let file = File::open(file.to_string())
-                                  .expect("Couldn't open the file");
+                              .expect("Couldn't open the file");
         let reader = BufReader::new(file);
         
         for (index, line) in reader
@@ -145,14 +163,35 @@ pub mod find_file {
     }
     }
 
-    pub fn enum_bash_history(file: String)
+    pub fn enum_txt_file(file: String)
     {
         let file = File::open(file.to_string())
-                                  .expect("Couldn't open the file");
+                                  .expect("Error happened while reading the text file !");
         let reader = BufReader::new(file);
         
         for (index, line) in reader.lines()
-                                                                 .enumerate() {
+        .enumerate() {
+            let line = match line 
+            {
+                Ok(line) => line,
+                Err(error) => continue,
+            };
+            if line.to_string()
+                   .contains("password")
+            {
+                println!("{}. {}", index, line);
+            }
+        }
+    }
+
+    pub fn enum_bash_history(file: String)
+    {
+        let file = File::open(file.to_string())
+                                  .expect("Error happened while reading the bash history !");
+        let reader = BufReader::new(file);
+        
+        for (index, line) in reader.lines()
+        .enumerate() {
             let line = match line 
             {
                 Ok(line) => line,
