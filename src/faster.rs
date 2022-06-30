@@ -1,5 +1,5 @@
-pub mod find_file { 
-
+pub mod faster {
+    
     use walkdir::WalkDir;
     use std::fs::File;
     use std::io::{BufRead, BufReader};
@@ -14,9 +14,12 @@ pub mod find_file {
         for file in WalkDir::new("C:\\").into_iter()
                                         .filter_map(|file| file.ok()) {
             
+            if file.path().to_string().contains("Windows") = false{
+                println!("OEAJFOEAFJZAOFAZ");
+            }
             let path = file.path()
             .display();
-
+            
             let CheckPath = Path::new(file.path());
 
             let file = file.file_name()
@@ -74,13 +77,16 @@ pub mod find_file {
                     enum_content_config((&path)
                     .to_string())
                 }
+
                 if file.ends_with(".txt") 
                 && CheckPath.readable() 
                 && file.len() < 10
                 {
+                    println!("      Text file found : {}", path);
                     enum_txt_file((&path)
                     .to_string())
                 }
+
                 if (file.ends_with(".psd1") 
                 || file.ends_with(".ps1") 
                 || file.ends_with(".psm1") 
@@ -215,13 +221,7 @@ pub mod find_file {
             Ok(line) => line,
             Err(error) => continue,
             };
-            if line.to_string().contains("password") 
-            || line.to_string().contains("-p") 
-            || line.to_string().contains("host") 
-            || line.to_string().contains("ssh")
-            {
-                println!("            {}. {}", index, line);
-            }           
+            println!("            {}. {}", index, line);
         }
     }
 

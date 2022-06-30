@@ -1,12 +1,16 @@
 pub mod help_menu { 
-    
+
+    use crate::enum_computer::enum_comp;
+    use crate::file_finder::find_file;
+
     use std::env;
     use std::process;
     use clearscreen;
 
     pub fn help() 
     {
-        let args: Vec<String> = env::args().collect();
+        let args: Vec<String> = env::args()
+        .collect();
 
         match args.len() {
 
@@ -19,9 +23,34 @@ pub mod help_menu {
                 },
 
             2 => {
-                match args[1].parse() {
-                    Ok(42) => println!("This is the answer!"),
-                    _ => println!("This is not the answer."),
+                match args[1].as_str() {
+                   "all" => 
+                   { 
+                    banner();
+                    enum_comp::get_time();
+                    enum_comp::system_information();
+                    enum_comp::network_information();
+                    enum_comp::powershell_version();
+                    enum_comp::processes();
+                    find_file::browse_dir();
+                   },
+
+                   "fast" => 
+                   {
+                    banner();
+                    enum_comp::get_time();
+                    enum_comp::system_information();
+                    enum_comp::network_information();
+                    enum_comp::powershell_version();
+                    enum_comp::processes();
+
+                   },
+
+                   _ => {
+                    banner();
+                    println!("Incorrect arguments passed !");
+                    process::exit(1);
+                   },
                 }
             },
             
