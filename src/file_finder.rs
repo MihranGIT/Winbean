@@ -10,8 +10,7 @@ pub mod find_file {
     pub fn browse_dir() {
         
         println!("\n • POTENTIAL INTERESTING FILES \n");
-        for file in WalkDir::new("C:\\").into_iter()
-                                        .filter_map(|file| file.ok()) {
+        for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
             
             let path = file.path().display();
 
@@ -81,10 +80,8 @@ pub mod find_file {
 
     pub fn enum_content_file(file: String)
     {
-        let file = File::open(file.to_string())
-                                .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -98,10 +95,8 @@ pub mod find_file {
 
     pub fn enum_content_config(file: String)
     {
-        let file = File::open(file.to_string())
-                        .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() {
             let line = match line 
             {
@@ -118,10 +113,8 @@ pub mod find_file {
 
     pub fn enum_content_gitconfig(file: String)
     {
-        let file = File::open(file.to_string())
-                              .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -129,9 +122,7 @@ pub mod find_file {
                 Ok(line) => line,
                 Err(_error) => continue,
             };
-            if line.to_string().contains("name") 
-            || line.to_string().contains("email") 
-            || line.to_string().contains("password")
+            if line.to_string().contains("name") || line.to_string().contains("email") || line.to_string().contains("password")
             {
                 println!("            {}. {}", index, line);
             }
@@ -140,10 +131,8 @@ pub mod find_file {
 
     pub fn enum_ssh_key(file: String)
     {
-        let file = File::open(file.to_string())
-                                  .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (_index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -157,10 +146,8 @@ pub mod find_file {
 
     pub fn enum_txt_file(file: String)
     {
-        let file = File::open(file.to_string())
-                                  .expect("Error happened while trying to read the text file !");
+        let file = File::open(file.to_string()).expect("Error happened while trying to read the text file !");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() {
             let line = match line 
             {
@@ -177,10 +164,8 @@ pub mod find_file {
 
     pub fn enum_script(file: String)
     {
-        let file = File::open(file.to_string())
-                .expect("Error happened while trying to read the script !");
+        let file = File::open(file.to_string()).expect("Error happened while trying to read the script !");
         let reader = BufReader::new(file);
-
         for (index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -199,7 +184,6 @@ pub mod find_file {
     {
         let file = File::open(file.to_string()).expect("Error happened while reading the bash history !");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() {
             let line = match line 
             {
