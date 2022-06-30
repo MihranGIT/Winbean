@@ -1,11 +1,10 @@
-use crate::enum_computer::enum_comp;
-use crate::file_finder::find_file;
 use crate::help::help_menu;
-use std::time::{Duration, Instant};
+use std::time::{Instant};
 
 mod help;
 mod enum_computer;
 mod file_finder;
+mod faster;
 
 fn main() 
 {

@@ -2,6 +2,7 @@ pub mod help_menu {
 
     use crate::enum_computer::enum_comp;
     use crate::file_finder::find_file;
+    use crate::faster::fast;
 
     use std::env;
     use std::process;
@@ -12,6 +13,7 @@ pub mod help_menu {
         let args: Vec<String> = env::args()
         .collect();
 
+    // Check arguments lenghts
         match args.len() {
 
             1 => {
@@ -24,6 +26,7 @@ pub mod help_menu {
 
             2 => {
                 match args[1].as_str() {
+            
                    "all" => 
                    { 
                     banner();
@@ -43,6 +46,7 @@ pub mod help_menu {
                     enum_comp::network_information();
                     enum_comp::powershell_version();
                     enum_comp::processes();
+                    fast::browse_dir();
 
                    },
 
@@ -54,6 +58,7 @@ pub mod help_menu {
                 }
             },
             
+            // Others cases
             _ => {
                 banner();
                 println!("Error ! Too much arguments passed ! \n Please pass one argument to make it work! \n");
@@ -64,6 +69,7 @@ pub mod help_menu {
 }
 }
 
+// Banner
 pub fn banner(){
     clearscreen::clear().expect("failed to clear screen");
     println!("#################################################################################################");
