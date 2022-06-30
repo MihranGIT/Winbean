@@ -11,14 +11,10 @@ pub mod find_file {
         
         println!("\n • POTENTIAL INTERESTING FILES \n");
         for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
-            
             let path = file.path().display();
-
             let check_path = Path::new(file.path());
-
             let file = file.file_name().to_string_lossy();
             
-            // All the cases possible
                 if (file.ends_with("password.txt") || file.ends_with("pass.txt") || file.ends_with("passwords.txt") || file.ends_with("motdepasse.txt") || file.ends_with("mdp.txt") || file.ends_with("pass.txt"))
                 && file.len() < 10
                 && check_path.readable()
@@ -72,8 +68,7 @@ pub mod find_file {
                 && file.len() < 10
                 {
                     println!("      Script file found : {}", path);                                        
-                    enum_script(((&path))
-                    .to_string())
+                    enum_script(((&path)).to_string())
                 }
         }
     }
