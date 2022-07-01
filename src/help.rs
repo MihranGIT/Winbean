@@ -19,6 +19,7 @@ pub mod help_menu {
                 println!("Error ! No argument found ! \n Please pass one argument to make it work! \n");
                 println!("• help : Display help menu");
                 println!("• all : Search in all files and display all files");
+                println!("• fast : Exclude some folders for the search");
                 process::exit(1);
                 },
 
@@ -48,9 +49,21 @@ pub mod help_menu {
 
                    },
 
+                   "help" =>
+                   {
+                    banner();
+                    println!("• help : Display help menu");
+                    println!("• all : Search in all files on the C: drive");
+                    println!("• fast : Exclude some folders for the search");
+                    process::exit(1);
+                   }
+
                    _ => {
                     banner();
-                    println!("Incorrect arguments passed !");
+                    println!("Incorrect arguments passed ! Please pass one correct argument to make it work! \n");
+                    println!("• help : Display help menu");
+                    println!("• all : Search in all files on the C: drive");
+                    println!("• fast : Exclude some folders for the search");
                     process::exit(1);
                    },
                 }
@@ -61,6 +74,7 @@ pub mod help_menu {
                 println!("Error ! Too much arguments passed ! \n Please pass one argument to make it work! \n");
                 println!("• help : Display help menu");
                 println!("• all : Search in all files and display all files");
+                println!("• fast : Exclude some folders for the search");
                 process::exit(1);
             }       
 }

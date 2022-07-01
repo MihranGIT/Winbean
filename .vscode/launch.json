@@ -7,15 +7,15 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'bruteforce_token'",
+            "name": "Debug executable 'winbean'",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=bruteforce_token",
-                    "--package=bruteforce_token"
+                    "--bin=winbean",
+                    "--package=winbean"
                 ],
                 "filter": {
-                    "name": "bruteforce_token",
+                    "name": "winbean",
                     "kind": "bin"
                 }
             },
@@ -25,16 +25,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in executable 'bruteforce_token'",
+            "name": "Debug unit tests in executable 'winbean",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--bin=bruteforce_token",
-                    "--package=bruteforce_token"
+                    "--bin=winbean",
+                    "--package=winbean"
                 ],
                 "filter": {
-                    "name": "bruteforce_token",
+                    "name": "winbean",
                     "kind": "bin"
                 }
             },
