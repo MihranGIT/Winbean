@@ -21,8 +21,9 @@ pub mod fast {
                 continue
             }
             else {
-                if (file.ends_with("password.txt") || file.ends_with("pass.txt") || file.ends_with("passwords.txt") || file.ends_with("motdepasse.txt") || file.ends_with("mdp.txt") || file.ends_with("pass.txt"))
+                if (file.to_lowercase().contains("password") || file.to_lowercase().contains("pass") || file.to_lowercase().contains("passwords") || file.to_lowercase().contains("motdepasse") || file.to_lowercase().contains("mdp") || file.to_lowercase().contains("pass"))
                 && file.len() < 10
+                && file.ends_with(".txt")
                 && check_path.readable()
                 {
                     println!("      Interesting file found : {}", path);
