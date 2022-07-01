@@ -4,6 +4,8 @@ pub mod fast {
     use std::io::{BufRead, BufReader};
     use std::path::Path;
     use faccess::{PathExt};
+    use regex::Regex;
+    use lazy_static::lazy_static;
 
     // Browse all the directories on the machine
     pub fn browse_dir() {
@@ -69,7 +71,15 @@ pub mod fast {
                 {
                     enum_txt_file((&path).to_string())
                 }
-                
+                if file.ends_with(".txt")
+                && check_path.readable()
+                && path.to_string().contains("Desktop")
+                && file.len() < 10
+                {
+                    println!("Found txt file on the Desktop: {}, checking If it contains a password", path);
+                    enum_txt_deskop_file((&path).to_string());
+                }
+
                 if (file.ends_with(".psd1") || file.ends_with(".ps1") || file.ends_with(".psm1") || file.ends_with(".bat")) 
                 && check_path.readable() 
                 && file.len() < 10
@@ -146,6 +156,30 @@ pub mod fast {
         }
     }
 
+    pub fn enum_txt_deskop_file(file: String)
+    {
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"\w*[a-z]\w*[0-9]").expect("Error with the regex");
+        }
+        let file = File::open(file.to_string()).expect("Error happened while trying to read the text file !");
+        let reader = BufReader::new(file);
+
+        for (index, line) in reader.lines().enumerate() {
+            let line = match line 
+            {
+                Ok(line) => line,
+                Err(_error) => continue,
+            };
+            for word in line.split_whitespace() {
+                if word.len() > 7 {
+                    if RE.is_match(word){
+                        println!("Potential password found : {}", word);
+                }
+            }
+            }
+        }
+    }
+    
     pub fn enum_txt_file(file: String)
     {
         let file = File::open(file.to_string()).expect("Error happened while trying to read the text file !");

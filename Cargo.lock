@@ -869,6 +869,7 @@ dependencies = [
  "clearscreen",
  "faccess",
  "ipconfig",
+ "lazy_static",
  "netstat2",
  "regex",
  "sysinfo",
