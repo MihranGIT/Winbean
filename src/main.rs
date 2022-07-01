@@ -9,7 +9,6 @@ mod faster;
 fn main() 
 {
     let start = Instant::now();
-    // Help and parsing arguments
     help_menu::help();
     println!("\n Finished ! Checked done in {:?}", start.elapsed());
 }

@@ -10,10 +10,8 @@ pub mod help_menu {
 
     pub fn help() 
     {
-        let args: Vec<String> = env::args()
-        .collect();
+        let args: Vec<String> = env::args().collect();
 
-    // Check arguments lenghts
         match args.len() {
 
             1 => {
@@ -58,7 +56,6 @@ pub mod help_menu {
                 }
             },
             
-            // Others cases
             _ => {
                 banner();
                 println!("Error ! Too much arguments passed ! \n Please pass one argument to make it work! \n");
@@ -69,7 +66,6 @@ pub mod help_menu {
 }
 }
 
-// Banner
 pub fn banner(){
     clearscreen::clear().expect("failed to clear screen");
     println!("#################################################################################################");

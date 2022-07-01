@@ -1,5 +1,4 @@
 pub mod fast {
- 
     use walkdir::WalkDir;
     use std::fs::File;
     use std::io::{BufRead, BufReader};
@@ -10,16 +9,18 @@ pub mod fast {
     pub fn browse_dir() {
         
         println!("\n • POTENTIAL INTERESTING FILES \n");
-        for file in WalkDir::new("C:\\").into_iter()
-                                        .filter_map(|file| file.ok()) {
-            
+        for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
             let path = file.path().display();
-
             let check_path = Path::new(file.path());
-
             let file = file.file_name().to_string_lossy();
             
-            // All the cases possible
+            if path.to_string().contains("WindowsPowerShell\\Modules") || path.to_string().contains("syswow64") || path.to_string().contains("system32") || path.to_string().contains("windows\\servicing") || path.to_string().contains("servicing") 
+            || path.to_string().contains("\\Microsoft\\.NET\\Framework") || path.to_string().contains("Windows") || path.to_string().contains("wsuscontent") || path.to_string().contains("\\puppet\\share\\doc") || path.to_string().contains("\\lib\\ruby")
+            || path.to_string().contains("\\lib\\site-packages") || path.to_string().contains("\\usr\\share\\doc") || path.to_string().contains("node_modules") || path.to_string().contains("vendor\\bundle") || path.to_string().contains("vendor\\cache") 
+            || path.to_string().contains("\\doc\\openssl") || path.to_string().contains("Python27\\Lib") {
+                continue
+            }
+            else {
                 if (file.ends_with("password.txt") || file.ends_with("pass.txt") || file.ends_with("passwords.txt") || file.ends_with("motdepasse.txt") || file.ends_with("mdp.txt") || file.ends_with("pass.txt"))
                 && file.len() < 10
                 && check_path.readable()
@@ -73,18 +74,15 @@ pub mod fast {
                 && file.len() < 10
                 {
                     println!("      Script file found : {}", path);                                        
-                    enum_script(((&path))
-                    .to_string())
+                    enum_script(((&path)).to_string())
                 }
         }
     }
 
     pub fn enum_content_file(file: String)
     {
-        let file = File::open(file.to_string())
-                                .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -98,10 +96,8 @@ pub mod fast {
 
     pub fn enum_content_config(file: String)
     {
-        let file = File::open(file.to_string())
-                        .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() {
             let line = match line 
             {
@@ -118,10 +114,8 @@ pub mod fast {
 
     pub fn enum_content_gitconfig(file: String)
     {
-        let file = File::open(file.to_string())
-                              .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -129,9 +123,7 @@ pub mod fast {
                 Ok(line) => line,
                 Err(_error) => continue,
             };
-            if line.to_string().contains("name") 
-            || line.to_string().contains("email") 
-            || line.to_string().contains("password")
+            if line.to_string().contains("name") || line.to_string().contains("email") || line.to_string().contains("password")
             {
                 println!("            {}. {}", index, line);
             }
@@ -140,10 +132,8 @@ pub mod fast {
 
     pub fn enum_ssh_key(file: String)
     {
-        let file = File::open(file.to_string())
-                                  .expect("Couldn't open the file");
+        let file = File::open(file.to_string()).expect("Couldn't open the file");
         let reader = BufReader::new(file);
-        
         for (_index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -157,10 +147,8 @@ pub mod fast {
 
     pub fn enum_txt_file(file: String)
     {
-        let file = File::open(file.to_string())
-                                  .expect("Error happened while trying to read the text file !");
+        let file = File::open(file.to_string()).expect("Error happened while trying to read the text file !");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() {
             let line = match line 
             {
@@ -177,10 +165,8 @@ pub mod fast {
 
     pub fn enum_script(file: String)
     {
-        let file = File::open(file.to_string())
-                .expect("Error happened while trying to read the script !");
+        let file = File::open(file.to_string()).expect("Error happened while trying to read the script !");
         let reader = BufReader::new(file);
-
         for (index, line) in reader.lines().enumerate() 
         {
             let line = match line 
@@ -199,7 +185,6 @@ pub mod fast {
     {
         let file = File::open(file.to_string()).expect("Error happened while reading the bash history !");
         let reader = BufReader::new(file);
-        
         for (index, line) in reader.lines().enumerate() {
             let line = match line 
             {
@@ -211,5 +196,6 @@ pub mod fast {
                 println!("            {}. SSH connection found in the history : {}", index, line);
             }
         }
+    }
     }
 }
