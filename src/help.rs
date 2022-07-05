@@ -1,8 +1,9 @@
 pub mod help_menu { 
 
     use crate::enum_computer::enum_comp;
-    use crate::file_finder::find_file;
-    use crate::faster::fast;
+    use crate::fast_mode::fast_mode;
+    use crate::all_mode::all_mode;
+    use crate::vnc::vnc_check::ultra_vnc_check;
 
     use std::env;
     use std::process;
@@ -11,7 +12,8 @@ pub mod help_menu {
     pub fn help() 
     {
         let args: Vec<String> = env::args().collect();
-
+        
+        // Checking number of arguments passed 
         match args.len() {
 
             1 => {
@@ -26,6 +28,7 @@ pub mod help_menu {
             2 => {
                 match args[1].as_str() {
             
+                    // If the argument is "fast"
                    "all" => 
                    { 
                     banner();
@@ -34,9 +37,11 @@ pub mod help_menu {
                     enum_comp::network_information();
                     enum_comp::powershell_version();
                     enum_comp::processes();
-                    find_file::browse_dir();
+                    all_mode::browse_dir();
+                    ultra_vnc_check();
                    },
 
+                   // If the argument is "fast"
                    "fast" => 
                    {
                     banner();
@@ -45,10 +50,12 @@ pub mod help_menu {
                     enum_comp::network_information();
                     enum_comp::powershell_version();
                     enum_comp::processes();
-                    fast::browse_dir();
+                    fast_mode::browse_dir();
+                    ultra_vnc_check();
 
                    },
-
+                
+                   // If the argument is "help"
                    "help" =>
                    {
                     banner();
@@ -58,6 +65,7 @@ pub mod help_menu {
                     process::exit(1);
                    }
 
+                   // Others cases
                    _ => {
                     banner();
                     println!("Incorrect arguments passed ! Please pass one correct argument to make it work! \n");
@@ -69,6 +77,7 @@ pub mod help_menu {
                 }
             },
             
+            // If there is more than 1 argument
             _ => {
                 banner();
                 println!("Error ! Too much arguments passed ! \n Please pass one argument to make it work! \n");
@@ -80,6 +89,7 @@ pub mod help_menu {
 }
 }
 
+// Pure art
 pub fn banner(){
     clearscreen::clear().expect("failed to clear screen");
     println!("\n  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");

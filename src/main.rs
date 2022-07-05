@@ -3,12 +3,16 @@ use std::time::{Instant};
 
 mod help;
 mod enum_computer;
-mod file_finder;
-mod faster;
+mod vnc;
+mod enum_file;
+mod all_mode;
+mod fast_mode;
+mod print_vector;
 
 fn main() 
 {
     let start = Instant::now();
     help_menu::help();
+    // Displaying time elapsed during the execution
     println!("\n Finished ! Checked done in {:?}", start.elapsed());
 }
