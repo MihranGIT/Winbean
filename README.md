@@ -1,4 +1,6 @@
-![image](https://user-images.githubusercontent.com/91540388/177731785-140a5403-1535-45d1-9605-eec319015bf2.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/91540388/177731785-140a5403-1535-45d1-9605-eec319015bf2.png" />
+</p>
 
 Winbean is a post-exploitation tool written in Rust harvesting credentials on the machine. 
 It's looking through files based on pattern, file extension, filename, specific words or function used.
