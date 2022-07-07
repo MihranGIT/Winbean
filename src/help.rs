@@ -1,8 +1,13 @@
 pub mod help_menu { 
 
-    use crate::enum_computer::enum_comp;
     use crate::fast_mode::fast_mode;
     use crate::all_mode::all_mode;
+    use crate::enum_computer::localtime::localtime_enum::get_time;
+    use crate::enum_computer::network::network_enum::network_information;
+    use crate::enum_computer::powershell::powershell_enum::powershell_version;
+    use crate::enum_computer::processes::processes_enum::get_processes;
+    use crate::enum_computer::system::system_enum::system_information;
+
 
     use std::env;
     use std::process;
@@ -31,7 +36,6 @@ pub mod help_menu {
                    "all" => 
                    { 
                     banner();
-                    enum_comp::enumerate_all();
                     all_mode::browse_dir(&String::from("C:\\"));
                    },
 
@@ -39,7 +43,11 @@ pub mod help_menu {
                    "fast" => 
                    {
                     banner();
-                    enum_comp::enumerate_all();
+                    get_time();
+                    system_information();
+                    powershell_version();
+                    network_information();
+                    get_processes();
                     fast_mode::browse_dir(&String::from("C:\\"));
 
                    },
@@ -77,7 +85,11 @@ pub mod help_menu {
                 "all" => 
                    { 
                     banner();
-                    enum_comp::enumerate_all();
+                    get_time();
+                    system_information();
+                    powershell_version();
+                    network_information();
+                    get_processes();
                     all_mode::browse_dir(&String::from(args[2].as_str()));
                    },
 
@@ -85,7 +97,11 @@ pub mod help_menu {
                    "fast" => 
                    {
                     banner();
-                    enum_comp::enumerate_all();
+                    get_time();
+                    system_information();
+                    powershell_version();
+                    network_information();
+                    get_processes();
                     fast_mode::browse_dir(&String::from(args[2].as_str()));
 
                    },

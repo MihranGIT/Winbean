@@ -3,8 +3,19 @@ pub mod all_mode {
     use walkdir::WalkDir;
     use std::path::Path;
     use faccess::{PathExt};
-    use crate::enum_file::enum_file;
     use crate::print_vector::print_vector;
+    use crate::enum_files::bash_history::bash_history_enum::enum_bash_history;
+    use crate::enum_files::config::config_enum::enum_content_config;
+    use crate::enum_files::content::content_enum::enum_content_file;
+    use crate::enum_files::gitconfig::gitconfig_enum::enum_content_gitconfig;
+    use crate::enum_files::php::php_enum::enum_php_file;
+    use crate::enum_files::regex::regex_enum::enum_txt_deskop_file;
+    use crate::enum_files::scripts::scripts_enum::enum_script;
+    use crate::enum_files::ssh::ssh_enum::enum_ssh_key;
+    use crate::enum_files::txt::txt_enum::enum_txt_file;
+
+
+
 
 
     pub fn browse_dir(drive: &String){
@@ -31,14 +42,14 @@ pub mod all_mode {
 
                     // Filtering per filename, to_lowercase() to avoid missing some file like "Password.txt", "PassWORD.txt" etc...
                     // Filtering per extension (txt file) and checking if the file is readable to prevent crash
-                    if (file.to_lowercase().contains("password") || file.to_lowercase().contains("pass") || file.to_lowercase().contains("passwords") || file.to_lowercase().contains("motdepasse") || file.to_lowercase().contains("mdp") || file.to_lowercase().contains("pass"))
+                    if (file.to_lowercase().contains("pass") || file.to_lowercase().contains("passwords") || file.to_lowercase().contains("motdepasse") || file.to_lowercase().contains("mdp"))
                     && file.len() < 10
                     && file.ends_with(".txt")
                     && check_path.readable()
                     {
                         println!("      Interesting file found : {}", path);
                         interresting_file.push(path.to_string());
-                        enum_file::enum_content_file((&path).to_string());
+                        enum_content_file((&path).to_string());
                     }
 
                     // Filtering gitconfig file
@@ -46,7 +57,7 @@ pub mod all_mode {
                     && check_path.readable()
                     {
                         println!("      Git config files : {}", path);
-                        enum_file::enum_content_gitconfig((&path).to_string(), &mut gitconfig_file);
+                        enum_content_gitconfig((&path).to_string(), &mut gitconfig_file);
                     }
 
                     // Looking for bash_history (with WSL for example) on the machine
@@ -54,7 +65,7 @@ pub mod all_mode {
                     && check_path.readable()
                     {
                         println!("      WSL history files found : {}", path);
-                        enum_file::enum_bash_history((&path).to_string(), &mut bash_history_file);
+                        enum_bash_history((&path).to_string(), &mut bash_history_file);
                     }
 
                     // Looking for SSH key based on the filename
@@ -62,7 +73,7 @@ pub mod all_mode {
                     && check_path.readable()
                     {
                         println!("      SSH key found : {}", path);
-                        enum_file::enum_ssh_key((&path).to_string(), &mut ssh_key);
+                        enum_ssh_key((&path).to_string(), &mut ssh_key);
                     }
 
                     // Looking for KeePass file
@@ -70,21 +81,28 @@ pub mod all_mode {
                     && check_path.readable()
                     {
                         println!("      Keepass found : {}", path);
-                        // keypass_file.push(&path.to_string());
+                        interresting_file.push(path.to_string());
+                    }
+
+                    if file.ends_with(".zip") || file.ends_with(".xls") || file.ends_with(".xlsx") || file.ends_with(".doc") || file.ends_with(".docx") || file.ends_with(".odt") 
+                    && check_path.readable()
+                    {
+                        println!("      Keepass found : {}", path);
+                        interresting_file.push(path.to_string());
                     }
 
                     if file.ends_with(".php") 
                     && check_path.readable()
                     {
                         println!("      Php file found : {} - Looking for credentials", path);
-                        enum_file::enum_php_file((&path).to_string(), &mut php_credentials);
+                        enum_php_file((&path).to_string(), &mut php_credentials);
                     }
 
                     // Looking for .config file
                     if file.ends_with(".config") 
                     && check_path.readable()
                     {
-                        enum_file::enum_content_config((&path).to_string(), &mut config_file);
+                        enum_content_config((&path).to_string(), &mut config_file);
                     }
                     
                     // Looking specificly for web.config file (default filename for IIS server config file)
@@ -99,7 +117,7 @@ pub mod all_mode {
                     && check_path.readable() 
                     && file.len() < 10
                     {
-                        enum_file::enum_txt_file((&path).to_string(), &mut txt_file);
+                        enum_txt_file((&path).to_string(), &mut txt_file);
                     }
 
                     if file.to_lowercase().ends_with("Groups.xml") || file.to_lowercase().ends_with("Services.xml") || file.to_lowercase().ends_with("Scheduledtasks.xml") || file.to_lowercase().ends_with("DataSources.xml") || file.to_lowercase().ends_with("Printers.xml") || 
@@ -117,7 +135,7 @@ pub mod all_mode {
                     && file.len() < 10
                     {
                         println!("      Found txt file on the Desktop: {}, checking If it contains a password", path);
-                        enum_file::enum_txt_deskop_file((&path).to_string(), &mut passwords);
+                        enum_txt_deskop_file((&path).to_string(), &mut passwords);
                     }
                     
                     // Looking for script file (bat and powershell)
@@ -126,7 +144,7 @@ pub mod all_mode {
                     && file.len() < 10
                     {
                         println!("      Script file found : {}", path);                                        
-                        enum_file::enum_script(((&path)).to_string(), &mut script_file);
+                        enum_script(((&path)).to_string(), &mut script_file);
                         script_file.push(path.to_string());
                     }
                 }

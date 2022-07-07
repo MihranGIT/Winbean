@@ -3,10 +3,12 @@ use std::time::{Instant};
 
 mod help;
 mod enum_computer;
-mod enum_file;
 mod all_mode;
 mod fast_mode;
 mod print_vector;
+pub mod enum_files;
+
+
 
 fn main() 
 {
