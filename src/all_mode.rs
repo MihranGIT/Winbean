@@ -6,14 +6,16 @@ pub mod all_mode {
     use crate::enum_file::enum_file;
     use crate::print_vector::print_vector;
 
-    pub fn browse_dir() {
 
+    pub fn browse_dir(drive: &String){
+
+            // Define string vectors
             let mut passwords = Vec::new();
             let mut interresting_file = Vec::new();
             let mut gitconfig_file = Vec::new();
             let mut bash_history_file = Vec::new();
             let mut ssh_key = Vec::new();
-            //let mut keypass_file = Vec::new();
+            let mut php_credentials = Vec::new();
             let mut script_file = Vec::new();
             let mut txt_file = Vec::new();
             let mut config_file = Vec::new();
@@ -21,7 +23,7 @@ pub mod all_mode {
             println!("\n • POTENTIAL INTERESTING FILES \n");
             
             // Searching through C:\ drive only
-            for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
+            for file in WalkDir::new(drive).into_iter().filter_map(|file| file.ok()) {
                 let path = file.path().display();
                 let check_path = Path::new(file.path());
                 let file = file.file_name().to_string_lossy();
@@ -71,6 +73,13 @@ pub mod all_mode {
                         // keypass_file.push(&path.to_string());
                     }
 
+                    if file.ends_with(".php") 
+                    && check_path.readable()
+                    {
+                        println!("      Php file found : {} - Looking for credentials", path);
+                        enum_file::enum_php_file((&path).to_string(), &mut php_credentials);
+                    }
+
                     // Looking for .config file
                     if file.ends_with(".config") 
                     && check_path.readable()
@@ -93,10 +102,18 @@ pub mod all_mode {
                         enum_file::enum_txt_file((&path).to_string(), &mut txt_file);
                     }
 
+                    if file.to_lowercase().ends_with("Groups.xml") || file.to_lowercase().ends_with("Services.xml") || file.to_lowercase().ends_with("Scheduledtasks.xml") || file.to_lowercase().ends_with("DataSources.xml") || file.to_lowercase().ends_with("Printers.xml") || 
+                    file.to_lowercase().ends_with("Drives.xml") || file.to_lowercase().ends_with("error.log") || file.to_lowercase().ends_with("access.log") || file.to_lowercase().ends_with("applicationHost.config") || file.to_lowercase().ends_with("vnc.ini") || 
+                    file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with("sysprep.xml") ||  file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with(".py") || file.to_lowercase().ends_with(".go"){
+                        println!("      Interesting file found : {}", path);
+                        interresting_file.push(path.to_string());
+                    } 
+
                     // Looking for txt file on the Desktop
                     if file.ends_with(".txt")
                     && check_path.readable()
                     && path.to_string().contains("\\Desktop\\")
+                    && path.to_string().contains("User")
                     && file.len() < 10
                     {
                         println!("      Found txt file on the Desktop: {}, checking If it contains a password", path);

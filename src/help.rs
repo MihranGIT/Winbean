@@ -3,7 +3,6 @@ pub mod help_menu {
     use crate::enum_computer::enum_comp;
     use crate::fast_mode::fast_mode;
     use crate::all_mode::all_mode;
-    use crate::vnc::vnc_check::ultra_vnc_check;
 
     use std::env;
     use std::process;
@@ -32,26 +31,16 @@ pub mod help_menu {
                    "all" => 
                    { 
                     banner();
-                    enum_comp::get_time();
-                    enum_comp::system_information();
-                    enum_comp::network_information();
-                    enum_comp::powershell_version();
-                    enum_comp::processes();
-                    all_mode::browse_dir();
-                    ultra_vnc_check();
+                    enum_comp::enumerate_all();
+                    all_mode::browse_dir(&String::from("C:\\"));
                    },
 
                    // If the argument is "fast"
                    "fast" => 
                    {
                     banner();
-                    enum_comp::get_time();
-                    enum_comp::system_information();
-                    enum_comp::network_information();
-                    enum_comp::powershell_version();
-                    enum_comp::processes();
-                    fast_mode::browse_dir();
-                    ultra_vnc_check();
+                    enum_comp::enumerate_all();
+                    fast_mode::browse_dir(&String::from("C:\\"));
 
                    },
                 
@@ -59,9 +48,14 @@ pub mod help_menu {
                    "help" =>
                    {
                     banner();
+                    println!("\nWinbean is a post-exploitation tool harvesting credentials on the machine. It's looking through files based on pattern, file extension, filename, specific words or function used. \nIt is not looking only for passwords but also files that could be interesting like scripts files, txt files, etc... \n");
+                    println!("Basic commands :");
                     println!("• help : Display help menu");
-                    println!("• all : Search in all files on the C: drive");
-                    println!("• fast : Exclude some folders for the search");
+                    println!("• all : Specific mode to search in all files on the drive (by default on the C:\\ drive, specify for another letter or a specific folder)");
+                    println!("• fast : Specific mode to exclude some folders for the search, faster than the all mode (by default on C:\\ drive, specify for another letter or a specific folder).\n");
+                    println!("Command : \"winbean.exe <mode> <drive or folder>\"");
+                    println!("Example : \"winbean.exe fast D:\\\" (fast mode harvesting on the D:\\ drive)");
+                    println!("          \"winbean.exe all C:\\Users\" (all mode harvesting starting on C:\\Users)"); 
                     process::exit(1);
                    }
 
@@ -76,6 +70,37 @@ pub mod help_menu {
                    },
                 }
             },
+
+            3 => {   
+                match args[1].as_str() {
+
+                "all" => 
+                   { 
+                    banner();
+                    enum_comp::enumerate_all();
+                    all_mode::browse_dir(&String::from(args[2].as_str()));
+                   },
+
+                   // If the argument is "fast"
+                   "fast" => 
+                   {
+                    banner();
+                    enum_comp::enumerate_all();
+                    fast_mode::browse_dir(&String::from(args[2].as_str()));
+
+                   },
+
+                   _ => {
+                    banner();
+                    println!("Incorrect arguments passed ! Please pass one correct argument to make it work! \n");
+                    println!("• help : Display help menu");
+                    println!("• all : Search in all files on the C: drive");
+                    println!("• fast : Exclude some folders for the search");
+                    process::exit(1);
+                   },
+            }
+        }
+
             
             // If there is more than 1 argument
             _ => {

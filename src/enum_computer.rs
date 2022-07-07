@@ -8,6 +8,15 @@ pub mod enum_comp {
     use netstat2::*;
     use chrono::prelude::*;
     
+    pub fn enumerate_all()
+    {
+        get_time();
+        system_information();
+        network_information();
+        powershell_version();
+        processes();  
+    }
+
     // Function to enumerate network information of the machine
     pub fn network_information() 
     {

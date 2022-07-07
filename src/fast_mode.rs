@@ -6,14 +6,15 @@ pub mod fast_mode {
     use crate::enum_file::enum_file;
     use crate::print_vector::print_vector;
 
-    pub fn browse_dir() {
+    pub fn browse_dir(drive: &String) {
 
+            // Define string vectors
             let mut passwords = Vec::new();
             let mut interresting_file = Vec::new();
             let mut gitconfig_file = Vec::new();
             let mut bash_history_file = Vec::new();
             let mut ssh_key = Vec::new();
-            //let mut keypass_file = Vec::new();
+            let mut php_credentials = Vec::new();
             let mut script_file = Vec::new();
             let mut txt_file = Vec::new();
             let mut config_file = Vec::new();
@@ -21,7 +22,7 @@ pub mod fast_mode {
             println!("\n • POTENTIAL INTERESTING FILES \n");
             
             // Searching through C:\ drive only
-            for file in WalkDir::new("C:\\").into_iter().filter_map(|file| file.ok()) {
+            for file in WalkDir::new(drive).max_depth(7).into_iter().filter_map(|file| file.ok()) {
                 let path = file.path().display();
                 let check_path = Path::new(file.path());
                 let file = file.file_name().to_string_lossy();
@@ -38,8 +39,8 @@ pub mod fast_mode {
                     // Filtering per filename, to_lowercase() to avoid missing some file like "Password.txt", "PassWORD.txt" etc...
                     // Filtering per extension (txt file) and checking if the file is readable to prevent crash
                     if (file.to_lowercase().contains("password") || file.to_lowercase().contains("pass") || file.to_lowercase().contains("passwords") || file.to_lowercase().contains("motdepasse") || file.to_lowercase().contains("mdp") || file.to_lowercase().contains("pass"))
-                    && file.len() < 10
                     && file.ends_with(".txt")
+                    && file.len() < 10
                     && check_path.readable()
                     {
                         println!("      Interesting file found : {}", path);
@@ -71,17 +72,25 @@ pub mod fast_mode {
                         enum_file::enum_ssh_key((&path).to_string(), &mut ssh_key);
                     }
 
+                    if file.ends_with(".php") 
+                    && check_path.readable()
+                    {
+                        println!("      Php file found : {} - Looking for credentials", path);
+                        enum_file::enum_php_file((&path).to_string(), &mut php_credentials);
+                    }
+
                     // Looking for KeePass file
                     if file.ends_with(".kdbx") 
                     && check_path.readable()
                     {
                         println!("      Keepass found : {}", path);
-                        // keypass_file.push(&path.to_string());
+                        interresting_file.push(path.to_string());
                     }
 
                     // Looking for .config file
                     if file.ends_with(".config") 
                     && check_path.readable()
+                    && file.len() < 10
                     {
                         enum_file::enum_content_config((&path).to_string(), &mut config_file);
                     }
@@ -91,7 +100,15 @@ pub mod fast_mode {
                     && check_path.readable()
                     {
                         println!("      Possible IIS Server : web.config file found ({})", &path.to_string());
+                        interresting_file.push(path.to_string());
                     }
+
+                    if file.to_lowercase().ends_with("Groups.xml") || file.to_lowercase().ends_with("Services.xml") || file.to_lowercase().ends_with("Scheduledtasks.xml") || file.to_lowercase().ends_with("DataSources.xml") || file.to_lowercase().ends_with("Printers.xml") || 
+                    file.to_lowercase().ends_with("Drives.xml") || file.to_lowercase().ends_with("error.log") || file.to_lowercase().ends_with("access.log") || file.to_lowercase().ends_with("applicationHost.config") || file.to_lowercase().ends_with("vnc.ini") || 
+                    file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with("sysprep.xml") ||  file.to_lowercase().ends_with("ultravnc.ini") {
+                        println!("      Interesting file found : {}", path);
+                        interresting_file.push(path.to_string());
+                    } 
                     
                     // Looking for txt file < 10ko
                     if file.ends_with(".txt") 
@@ -127,6 +144,9 @@ pub mod fast_mode {
         passwords.dedup();
         bash_history_file.sort();
         bash_history_file.dedup();
+        php_credentials.sort();
+        php_credentials.dedup();
+
 
         //print_vector is a function to print one element of a vector per line
         print_vector::print_vector(&script_file);
@@ -134,9 +154,13 @@ pub mod fast_mode {
         print_vector::print_vector(&bash_history_file);
         println!("\n\n      • Interesting file found : \n");
         print_vector::print_vector(&interresting_file);
+        println!("\n\n      • PowerShell/Batch scripts found\n");
+        print_vector::print_vector(&script_file);
+        println!("\n\n      • Credentials founds in PHP files\n");
+        print_vector::print_vector(&php_credentials);
         println!("\n\n      • Git config file found : \n");
         print_vector::print_vector(&gitconfig_file);
-        println!("\n\n      • Config file found : \n");
+        println!("\n\n      • Config files found : \n");
         print_vector::print_vector(&config_file);
         println!("\n\n      • Potential SSH key found \n");
         print_vector::print_vector(&ssh_key);

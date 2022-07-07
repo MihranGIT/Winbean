@@ -3,7 +3,6 @@ use std::time::{Instant};
 
 mod help;
 mod enum_computer;
-mod vnc;
 mod enum_file;
 mod all_mode;
 mod fast_mode;
