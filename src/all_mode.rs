@@ -30,6 +30,8 @@ pub mod all_mode {
             let mut script_file = Vec::new();
             let mut txt_file = Vec::new();
             let mut config_file = Vec::new();
+            let mut fileshare = Vec::new();
+            let mut url: Vec<String> = Vec::new();
             
             println!("\n • POTENTIAL INTERESTING FILES \n");
             
@@ -42,7 +44,7 @@ pub mod all_mode {
 
                     // Filtering per filename, to_lowercase() to avoid missing some file like "Password.txt", "PassWORD.txt" etc...
                     // Filtering per extension (txt file) and checking if the file is readable to prevent crash
-                    if (file.to_lowercase().contains("pass") || file.to_lowercase().contains("passwords") || file.to_lowercase().contains("motdepasse") || file.to_lowercase().contains("mdp"))
+                    if (file.to_lowercase().contains("pass") || file.to_lowercase().contains("motdepass") || file.to_lowercase().contains("mdp") || file.to_lowercase().contains("mot_de_pass") || file.to_lowercase().contains("contraseña"))
                     && file.len() < 10
                     && file.ends_with(".txt")
                     && check_path.readable()
@@ -84,7 +86,7 @@ pub mod all_mode {
                         interresting_file.push(path.to_string());
                     }
 
-                    if file.ends_with(".zip") || file.ends_with(".xls") || file.ends_with(".xlsx") || file.ends_with(".doc") || file.ends_with(".docx") || file.ends_with(".odt") 
+                    if file.ends_with(".zip") || file.ends_with(".xls") || file.ends_with(".xlsx") || file.ends_with(".doc") || file.ends_with(".docx") || file.ends_with(".odt")
                     && check_path.readable()
                     {
                         println!("      Keepass found : {}", path);
@@ -96,6 +98,7 @@ pub mod all_mode {
                     {
                         println!("      Php file found : {} - Looking for credentials", path);
                         enum_php_file((&path).to_string(), &mut php_credentials);
+                        interresting_file.push(path.to_string());
                     }
 
                     // Looking for .config file
@@ -122,7 +125,8 @@ pub mod all_mode {
 
                     if file.to_lowercase().ends_with("Groups.xml") || file.to_lowercase().ends_with("Services.xml") || file.to_lowercase().ends_with("Scheduledtasks.xml") || file.to_lowercase().ends_with("DataSources.xml") || file.to_lowercase().ends_with("Printers.xml") || 
                     file.to_lowercase().ends_with("Drives.xml") || file.to_lowercase().ends_with("error.log") || file.to_lowercase().ends_with("access.log") || file.to_lowercase().ends_with("applicationHost.config") || file.to_lowercase().ends_with("vnc.ini") || 
-                    file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with("sysprep.xml") ||  file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with(".py") || file.to_lowercase().ends_with(".go"){
+                    file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with("sysprep.xml") ||  file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with(".py") || file.to_lowercase().ends_with(".go") ||
+                    file.to_lowercase().ends_with("LocalSettings.php") || file.to_lowercase().ends_with(".htpasswd") {
                         println!("      Interesting file found : {}", path);
                         interresting_file.push(path.to_string());
                     } 
@@ -135,7 +139,7 @@ pub mod all_mode {
                     && file.len() < 10
                     {
                         println!("      Found txt file on the Desktop: {}, checking If it contains a password", path);
-                        enum_txt_deskop_file((&path).to_string(), &mut passwords);
+                        enum_txt_deskop_file((&path).to_string(), &mut passwords, &mut fileshare, &mut url);
                     }
                     
                     // Looking for script file (bat and powershell)
@@ -148,11 +152,17 @@ pub mod all_mode {
                         script_file.push(path.to_string());
                     }
                 }
-                    // Sort and remove all duplicates from the vectors
+        // Sort and remove all duplicates from the vectors
         passwords.sort();
         passwords.dedup();
         bash_history_file.sort();
         bash_history_file.dedup();
+        php_credentials.sort();
+        php_credentials.dedup();
+        fileshare.sort();
+        fileshare.dedup();
+        url.sort();
+        url.dedup();
 
         //print_vector is a function to print one element of a vector per line
         print_vector::print_vector(&script_file);
@@ -168,5 +178,7 @@ pub mod all_mode {
         print_vector::print_vector(&ssh_key);
         println!("\n\n      • Potential passwords found\n");
         print_vector::print_vector(&passwords);
+        println!("\n\n      • Potential sharefolder found\n");
+        print_vector::print_vector(&fileshare);
         }
 }

@@ -3,6 +3,7 @@ pub mod ssh_enum {
     use std::fs::File;
     use std::io::{BufRead, BufReader};
 
+    // Looking for ssh key based on the filename
     pub fn enum_ssh_key(file: String, ssh_key: &mut Vec<String>)
     {
         let file = File::open(file.to_string()).expect("Couldn't open the file");

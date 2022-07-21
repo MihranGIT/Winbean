@@ -3,6 +3,7 @@ pub mod powershell_enum {
     use winreg;
     use winreg::enums::{HKEY_LOCAL_MACHINE, KEY_READ};
 
+    // Getting PowerShell version
     pub fn powershell_version()
     {
         println!("\n • PowerShell version available \n");

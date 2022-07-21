@@ -3,6 +3,7 @@ pub mod content_enum {
     use std::fs::File;
     use std::io::{BufRead, BufReader};
 
+    // Enumerating content file of txt files with "pass" or "password" in the filename
     pub fn enum_content_file(file: String)
     {
         let file = File::open(file.to_string()).expect("Couldn't open the file");

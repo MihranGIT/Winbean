@@ -3,6 +3,7 @@ pub mod config_enum {
     use std::fs::File;
     use std::io::{BufRead, BufReader};
 
+    // Enumerating config files and looking for any mention of passwords
     pub fn enum_content_config(file: String, config_file: &mut Vec<String>)
     {
         let file = File::open(file.to_string()).expect("Couldn't open the file");

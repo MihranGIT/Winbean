@@ -26,6 +26,8 @@ pub mod fast_mode {
             let mut script_file = Vec::new();
             let mut txt_file = Vec::new();
             let mut config_file = Vec::new();
+            let mut fileshare = Vec::new();
+            let mut url: Vec<String> = Vec::new();
             
             println!("\n • POTENTIAL INTERESTING FILES \n");
             
@@ -39,14 +41,14 @@ pub mod fast_mode {
                 if path.to_string().contains("WindowsPowerShell\\Modules") || path.to_string().contains("syswow64") || path.to_string().contains("system32") || path.to_string().contains("windows\\servicing") || path.to_string().contains("servicing") 
                 || path.to_string().contains("\\Microsoft\\.NET\\Framework") || path.to_string().contains("Windows") || path.to_string().contains("wsuscontent") || path.to_string().contains("\\puppet\\share\\doc") || path.to_string().contains("\\lib\\ruby")
                 || path.to_string().contains("\\lib\\site-packages") || path.to_string().contains("\\usr\\share\\doc") || path.to_string().contains("node_modules") || path.to_string().contains("vendor\\bundle") || path.to_string().contains("vendor\\cache") 
-                || path.to_string().contains("\\doc\\openssl") || path.to_string().contains("Python27\\Lib") {
+                || path.to_string().contains("\\doc\\openssl") || path.to_string().contains("Python27\\Lib") || path.to_string().contains("\\AppData\\Roaming\\Microsoft") || path.to_string().contains("\\AppData\\Local\\Microsoft"){
                     continue
                 }
                 else {
 
                     // Filtering per filename, to_lowercase() to avoid missing some file like "Password.txt", "PassWORD.txt" etc...
                     // Filtering per extension (txt file) and checking if the file is readable to prevent crash
-                    if (file.to_lowercase().contains("pass") || file.to_lowercase().contains("passwords") || file.to_lowercase().contains("motdepasse") || file.to_lowercase().contains("mdp"))
+                    if (file.to_lowercase().contains("pass") || file.to_lowercase().contains("motdepass") || file.to_lowercase().contains("mdp") || file.to_lowercase().contains("mot_de_pass") || file.to_lowercase().contains("contraseña"))
                     && file.ends_with(".txt")
                     && file.len() < 10
                     && check_path.readable()
@@ -85,6 +87,7 @@ pub mod fast_mode {
                     {
                         println!("      Php file found : {} - Looking for credentials", path);
                         enum_php_file((&path).to_string(), &mut php_credentials);
+                        interresting_file.push(path.to_string());
                     }
 
                     // Looking for KeePass file
@@ -113,7 +116,7 @@ pub mod fast_mode {
 
                     if file.to_lowercase().ends_with("Groups.xml") || file.to_lowercase().ends_with("Services.xml") || file.to_lowercase().ends_with("Scheduledtasks.xml") || file.to_lowercase().ends_with("DataSources.xml") || file.to_lowercase().ends_with("Printers.xml") || 
                     file.to_lowercase().ends_with("Drives.xml") || file.to_lowercase().ends_with("error.log") || file.to_lowercase().ends_with("access.log") || file.to_lowercase().ends_with("applicationHost.config") || file.to_lowercase().ends_with("vnc.ini") || 
-                    file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with("sysprep.xml") {
+                    file.to_lowercase().ends_with("ultravnc.ini") ||  file.to_lowercase().ends_with("sysprep.xml") || file.to_lowercase().ends_with("LocalSettings.php") || file.to_lowercase().ends_with(".htpasswd") {
                         println!("      Interesting file found : {}", path);
                         interresting_file.push(path.to_string());
                     } 
@@ -133,7 +136,7 @@ pub mod fast_mode {
                     && file.len() < 10
                     {
                         println!("      Found txt file on the Desktop: {}, checking If it contains a password", path);
-                        enum_txt_deskop_file((&path).to_string(), &mut passwords);
+                        enum_txt_deskop_file((&path).to_string(), &mut passwords, &mut fileshare, &mut url);
                     }
                     
                     // Looking for script file (bat and powershell)
@@ -154,6 +157,10 @@ pub mod fast_mode {
         bash_history_file.dedup();
         php_credentials.sort();
         php_credentials.dedup();
+        fileshare.sort();
+        fileshare.dedup();
+        url.sort();
+        url.dedup();
 
 
         //print_vector is a function to print one element of a vector per line
@@ -174,5 +181,9 @@ pub mod fast_mode {
         print_vector::print_vector(&ssh_key);
         println!("\n\n      • Potential passwords found\n");
         print_vector::print_vector(&passwords);
+        println!("\n\n      • Potential sharefolder found\n");
+        print_vector::print_vector(&fileshare);
+        println!("\n\n      • Potential URL found\n");
+        print_vector::print_vector(&url);
         }
     }

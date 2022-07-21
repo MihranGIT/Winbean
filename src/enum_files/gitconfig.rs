@@ -3,6 +3,7 @@ pub mod gitconfig_enum {
     use std::fs::File;
     use std::io::{BufRead, BufReader};
 
+    // Looking for name, emails and passwords stocked on the gitconfig files
     pub fn enum_content_gitconfig(file: String, gitconfig_file: &mut Vec<String>)
     {
         let file = File::open(file.to_string()).expect("Couldn't open the file");

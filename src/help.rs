@@ -36,6 +36,11 @@ pub mod help_menu {
                    "all" => 
                    { 
                     banner();
+                    get_time();
+                    system_information();
+                    powershell_version();
+                    network_information();
+                    get_processes();
                     all_mode::browse_dir(&String::from("C:\\"));
                    },
 
@@ -43,15 +48,19 @@ pub mod help_menu {
                    "fast" => 
                    {
                     banner();
+                    fast_mode::browse_dir(&String::from("C:\\"));
+
+                   },
+                
+                   "enum" =>
+                   {
+                    banner();
                     get_time();
                     system_information();
                     powershell_version();
                     network_information();
                     get_processes();
-                    fast_mode::browse_dir(&String::from("C:\\"));
-
-                   },
-                
+                   }
                    // If the argument is "help"
                    "help" =>
                    {
@@ -97,11 +106,6 @@ pub mod help_menu {
                    "fast" => 
                    {
                     banner();
-                    get_time();
-                    system_information();
-                    powershell_version();
-                    network_information();
-                    get_processes();
                     fast_mode::browse_dir(&String::from(args[2].as_str()));
 
                    },

@@ -3,6 +3,8 @@ pub mod php_enum {
     use std::fs::File;
     use std::io::{BufRead, BufReader};
     
+    // Looking for php file and searching through the file for any specific functions that mostly takes credentials as arguments
+    // Also looking for any mention of "pass" that could reveal password
     pub fn enum_php_file(file: String, php_credentials: &mut Vec<String>){
         let file = File::open(file.to_string()).expect("Error happened while reading the bash history !");
         let reader = BufReader::new(file);
